@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import loginService from './services/login';
 
@@ -11,6 +11,14 @@ const App = () => {
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
+    if (loggedUserJSON) {
+      const parsedUser = JSON.parse(loggedUserJSON);
+      setUser(parsedUser);
+    }
+  }, []);
+
   const handleLogin = async (e) => {
     e.preventDefault(e);
     const userBody = {
@@ -20,21 +28,37 @@ const App = () => {
 
     try {
       const loggedUser = await loginService.login(userBody);
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(loggedUser),
+      );
       setUser(loggedUser);
+      setUsername('');
+      setPassword('');
       console.log(loggedUser);
     } catch (exception) {
       console.error(exception);
     }
   };
 
+  const handleLogout = () => {
+    setUser('');
+  };
+
   if (user) {
     return (
       <div>
         <h1>Blogs</h1>
-        <p>
+        <span>
           {user.name}
           logged in
-        </p>
+          <button
+            type="button"
+            onClick={handleLogout}
+          >
+            logout
+          </button>
+        </span>
+
         {user.blogs.map((blog) => (
           <p key={blog.title}>
             {blog.title}
