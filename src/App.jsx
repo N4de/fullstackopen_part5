@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
 import loginService from './services/login';
+import blogService from './services/blogs';
+import BlogForm from './components/blogForm';
+import LoginForm from './components/loginForm';
 
 const App = () => {
-  const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState('');
-  const [showAll, setShowAll] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
+  const [blogFormVisible, setblogFormVisible] = useState(false);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
@@ -45,6 +48,22 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser');
   };
 
+  const handleBlogSubmit = async (e) => {
+    e.preventDefault(e);
+    const newBlog = {
+      title,
+      author,
+      url,
+    };
+
+    try {
+      const createdBlog = await blogService.createBlog(newBlog);
+      console.log(createdBlog);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (user) {
     return (
       <div>
@@ -59,6 +78,17 @@ const App = () => {
             logout
           </button>
         </span>
+        <BlogForm
+          title={title}
+          setTitle={setTitle}
+          author={author}
+          setAuthor={setAuthor}
+          url={url}
+          setUrl={setUrl}
+          onSubmit={handleBlogSubmit}
+          blogFormVisible={blogFormVisible}
+          setblogFormVisible={setblogFormVisible}
+        />
 
         {user.blogs.map((blog) => (
           <p key={blog.title}>
@@ -71,30 +101,13 @@ const App = () => {
 
   return (
     <div>
-      <h2>Login</h2>
-
-      <form onSubmit={handleLogin}>
-        <div>
-      username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
-
+      <LoginForm
+        handleSubmit={handleLogin}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        username={username}
+        password={password}
+      />
     </div>
 
   );
