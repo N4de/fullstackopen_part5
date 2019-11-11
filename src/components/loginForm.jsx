@@ -1,10 +1,10 @@
+/* eslint-disable react/forbid-prop-types */
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import PropTypes from 'prop-types';
 
 const LoginForm = ({
   handleSubmit,
-  handleUsernameChange,
-  handlePasswordChange,
   username,
   password,
 }) => (
@@ -15,16 +15,13 @@ const LoginForm = ({
       <div>
         username
         <input
-          value={username}
-          onChange={handleUsernameChange}
+          {...username}
         />
       </div>
       <div>
         password
         <input
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
+          {...password}
         />
       </div>
       <button type="submit">login</button>
@@ -33,10 +30,8 @@ const LoginForm = ({
 );
 
 LoginForm.propTypes = {
-  username: PropTypes.string.isRequired,
-  handleUsernameChange: PropTypes.func.isRequired,
-  password: PropTypes.string.isRequired,
-  handlePasswordChange: PropTypes.func.isRequired,
+  username: PropTypes.object.isRequired,
+  password: PropTypes.object.isRequired,
 };
 
 export default LoginForm;

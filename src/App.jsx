@@ -4,15 +4,16 @@ import loginService from './services/login';
 import blogService from './services/blogs';
 import BlogForm from './components/blogForm';
 import LoginForm from './components/loginForm';
+import { useField } from './hooks';
 
 const App = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
   const [blogFormVisible, setblogFormVisible] = useState(false);
+  const username = useField('text');
+  const password = useField('password');
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
@@ -25,8 +26,8 @@ const App = () => {
   const handleLogin = async (e) => {
     e.preventDefault(e);
     const userBody = {
-      username,
-      password,
+      username: username.value,
+      password: password.value,
     };
 
     try {
@@ -35,8 +36,6 @@ const App = () => {
         'loggedBlogappUser', JSON.stringify(loggedUser),
       );
       setUser(loggedUser);
-      setUsername('');
-      setPassword('');
       console.log(loggedUser);
     } catch (exception) {
       console.error(exception);
@@ -103,8 +102,6 @@ const App = () => {
     <div>
       <LoginForm
         handleSubmit={handleLogin}
-        handleUsernameChange={({ target }) => setUsername(target.value)}
-        handlePasswordChange={({ target }) => setPassword(target.value)}
         username={username}
         password={password}
       />

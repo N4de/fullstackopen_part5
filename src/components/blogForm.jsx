@@ -14,6 +14,7 @@ const BlogForm = ({
   const hideWhenVisible = { display: blogFormVisible ? 'none' : '' };
   const showWhenVisible = { display: blogFormVisible ? '' : 'none' };
 
+
   return (
     <div>
       <div style={hideWhenVisible}>
