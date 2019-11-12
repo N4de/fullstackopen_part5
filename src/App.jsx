@@ -8,17 +8,18 @@ import { useField } from './hooks';
 
 const App = () => {
   const [user, setUser] = useState(null);
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
   const [blogFormVisible, setblogFormVisible] = useState(false);
   const username = useField('text');
   const password = useField('password');
+  const title = useField('text');
+  const author = useField('text');
+  const url = useField('url');
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
     if (loggedUserJSON) {
       const parsedUser = JSON.parse(loggedUserJSON);
+      blogService.setToken(parsedUser.token);
       setUser(parsedUser);
     }
   }, []);
@@ -35,7 +36,10 @@ const App = () => {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(loggedUser),
       );
+      username.reset();
+      password.reset();
       setUser(loggedUser);
+      blogService.setToken(loggedUser.token);
       console.log(loggedUser);
     } catch (exception) {
       console.error(exception);
@@ -50,14 +54,17 @@ const App = () => {
   const handleBlogSubmit = async (e) => {
     e.preventDefault(e);
     const newBlog = {
-      title,
-      author,
-      url,
+      title: title.value,
+      author: author.value,
+      url: url.value,
     };
 
     try {
       const createdBlog = await blogService.createBlog(newBlog);
       console.log(createdBlog);
+      url.reset();
+      author.reset();
+      title.reset();
     } catch (err) {
       console.error(err);
     }
@@ -79,11 +86,8 @@ const App = () => {
         </span>
         <BlogForm
           title={title}
-          setTitle={setTitle}
           author={author}
-          setAuthor={setAuthor}
           url={url}
-          setUrl={setUrl}
           onSubmit={handleBlogSubmit}
           blogFormVisible={blogFormVisible}
           setblogFormVisible={setblogFormVisible}
