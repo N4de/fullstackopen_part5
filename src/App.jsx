@@ -27,8 +27,8 @@ const App = () => {
   const handleLogin = async (e) => {
     e.preventDefault(e);
     const userBody = {
-      username: username.value,
-      password: password.value,
+      username: username.form.value,
+      password: password.form.value,
     };
 
     try {
@@ -36,8 +36,6 @@ const App = () => {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(loggedUser),
       );
-      username.reset();
-      password.reset();
       setUser(loggedUser);
       blogService.setToken(loggedUser.token);
       console.log(loggedUser);
@@ -54,9 +52,9 @@ const App = () => {
   const handleBlogSubmit = async (e) => {
     e.preventDefault(e);
     const newBlog = {
-      title: title.value,
-      author: author.value,
-      url: url.value,
+      title: title.form.value,
+      author: author.form.value,
+      url: url.form.value,
     };
 
     try {
@@ -85,9 +83,9 @@ const App = () => {
           </button>
         </span>
         <BlogForm
-          title={title}
-          author={author}
-          url={url}
+          title={title.form}
+          author={author.form}
+          url={url.form}
           onSubmit={handleBlogSubmit}
           blogFormVisible={blogFormVisible}
           setblogFormVisible={setblogFormVisible}
@@ -106,8 +104,8 @@ const App = () => {
     <div>
       <LoginForm
         handleSubmit={handleLogin}
-        username={username}
-        password={password}
+        username={username.form}
+        password={password.form}
       />
     </div>
 

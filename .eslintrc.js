@@ -20,9 +20,11 @@ module.exports = {
   },
   plugins: [
     'react',
+    'react-hooks',
   ],
   rules: {
     'react/prop-types': 0,
     'no-console': 0,
+    "react-hooks/rules-of-hooks": "error",
   },
 };

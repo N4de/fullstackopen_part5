@@ -12,10 +12,15 @@ export const useField = (type) => {
     setValue('');
   };
 
+  // export like this so reset is excluded from props that go straight to the form
+  // this way you can spread props directly to a form component
+  // without having to worry about errors.
   return {
-    type,
-    value,
-    onChange,
+    form: {
+      type,
+      value,
+      onChange,
+    },
     reset,
   };
 };
